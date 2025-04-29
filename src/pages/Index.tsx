@@ -130,7 +130,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onAddTask={() => navigate('/add-task')} />
+      <Header />
       <main className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Мои задачи</h1>
@@ -140,8 +140,8 @@ const Index = () => {
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
-          <div className="flex gap-4 flex-col sm:flex-row">
-            <div className="relative w-full">
+          <div className="flex gap-4 items-center flex-wrap">
+            <div className="relative w-full sm:w-auto sm:flex-1">
               <input
                 type="text"
                 placeholder="Поиск задач..."
@@ -166,8 +166,8 @@ const Index = () => {
             </div>
 
             <DropdownMenu open={showStatusDropdown} onOpenChange={setShowStatusDropdown}>
-              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-full sm:w-auto">
-                <span>{statusFilter}</span>
+              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-40">
+                <span className="truncate">{statusFilter}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -178,12 +178,12 @@ const Index = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-4 w-4 ml-2"
+                  className="h-4 w-4 ml-2 flex-shrink-0"
                 >
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setStatusFilter("Все статусы")}>
                   {statusFilter === "Все статусы" && <Check className="h-4 w-4 mr-2" />}
                   Все статусы
@@ -204,8 +204,8 @@ const Index = () => {
             </DropdownMenu>
 
             <DropdownMenu open={showPriorityDropdown} onOpenChange={setShowPriorityDropdown}>
-              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-full sm:w-auto">
-                <span>{priorityFilter}</span>
+              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-40">
+                <span className="truncate">{priorityFilter}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -216,12 +216,12 @@ const Index = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-4 w-4 ml-2"
+                  className="h-4 w-4 ml-2 flex-shrink-0"
                 >
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setPriorityFilter("Все приоритеты")}>
                   {priorityFilter === "Все приоритеты" && <Check className="h-4 w-4 mr-2" />}
                   Все приоритеты

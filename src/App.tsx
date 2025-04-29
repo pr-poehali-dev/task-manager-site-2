@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 
@@ -31,13 +32,17 @@ const App = () => {
             {/* Публичные маршруты */}
             <Route 
               path="/login" 
-              element={isLoggedIn ? <Navigate to="/" /> : <Login />} 
+              element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} 
             />
             
             {/* Защищенные маршруты */}
             <Route 
               path="/" 
               element={isLoggedIn ? <Index /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/dashboard" 
+              element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/settings" 
