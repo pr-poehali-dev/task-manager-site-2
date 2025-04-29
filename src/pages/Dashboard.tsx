@@ -5,24 +5,33 @@ import { Progress } from "@/components/ui/progress";
 import { TaskType } from "@/types/task";
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState<TaskType[]>([
-    {
-      id: 1,
-      title: "Разработать дизайн главной страницы",
-      description: "Создать макет и прототип главной страницы для нового проекта",
-      dueDate: "05.05.2025",
-      priority: "высокий",
-      status: "в процессе",
-    },
-    {
-      id: 2,
-      title: "Настроить базу данных",
-      description: "Установить и настроить MongoDB для нового проекта",
-      dueDate: "10.05.2025",
-      priority: "средний",
-      status: "новая",
-    },
-  ]);
+  const [tasks, setTasks] = useState<TaskType[]>([]);
+
+  useEffect(() => {
+    // При монтировании компонента получаем задачи из localStorage
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+    }
+
+    // Подписываемся на изменения в localStorage
+    const handleStorageChange = () => {
+      const updatedTasks = localStorage.getItem("tasks");
+      if (updatedTasks) {
+        setTasks(JSON.parse(updatedTasks));
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Создаем собственное событие для обновления данных между вкладками
+    window.addEventListener("tasksUpdated", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("tasksUpdated", handleStorageChange);
+    };
+  }, []);
 
   const completedTasks = tasks.filter(task => task.status === "завершена");
   const inProgressTasks = tasks.filter(task => task.status === "в процессе");
@@ -40,7 +49,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header showAddButton={false} />
       <main className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Дашборд</h1>

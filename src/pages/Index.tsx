@@ -53,7 +53,22 @@ const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Сохраняем задачи в localStorage при их изменении
   useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    
+    // Создаем событие для обновления данных между вкладками
+    const event = new Event("tasksUpdated");
+    window.dispatchEvent(event);
+  }, [tasks]);
+
+  useEffect(() => {
+    // Загружаем задачи из localStorage при монтировании компонента
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+    }
+    
     // Проверка URL для открытия модальных окон
     if (location.pathname === "/add-task") {
       setShowAddTaskDialog(true);
@@ -65,7 +80,7 @@ const Index = () => {
         setShowEditTaskDialog(true);
       }
     }
-  }, [location, tasks]);
+  }, [location]);
 
   const handleStatusChange = (taskId: number, newStatus: string) => {
     setTasks(
@@ -130,7 +145,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header showAddButton={true} />
       <main className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Мои задачи</h1>
@@ -140,8 +155,8 @@ const Index = () => {
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
-          <div className="flex gap-4 items-center flex-wrap">
-            <div className="relative w-full sm:w-auto sm:flex-1">
+          <div className="flex gap-4 items-center">
+            <div className="relative flex-1">
               <input
                 type="text"
                 placeholder="Поиск задач..."

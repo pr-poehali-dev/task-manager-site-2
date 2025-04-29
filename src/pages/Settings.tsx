@@ -3,20 +3,14 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Mail, Lock } from "lucide-react";
 
 const Settings = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("user@example.com");
-  const [displayName, setDisplayName] = useState("Пользователь");
-  const [darkMode, setDarkMode] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(false);
   
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -64,191 +58,116 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header showAddButton={false} />
       <main className="container py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Настройки</h1>
+          <h1 className="text-3xl font-bold mb-2">Настройки профиля</h1>
           <p className="text-muted-foreground">
-            Управляйте своим профилем и настройками приложения
+            Управляйте настройками вашего аккаунта
           </p>
         </div>
 
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="mb-8">
-            <TabsTrigger value="profile">Профиль</TabsTrigger>
-            <TabsTrigger value="security">Безопасность</TabsTrigger>
-            <TabsTrigger value="notifications">Уведомления</TabsTrigger>
-            <TabsTrigger value="appearance">Внешний вид</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="profile" className="space-y-6">
-            <div className="space-y-4 max-w-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Изменение Email */}
+          <div className="bg-white p-6 rounded-lg border shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <Mail className="h-5 w-5 text-blue-500" />
+              <h3 className="text-xl font-bold">Изменить Email</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">
+              Обновите адрес электронной почты для вашего аккаунта
+            </p>
+            
+            {emailChangeSuccess && (
+              <Alert className="bg-green-50 border-green-200 text-green-800 mb-4">
+                <AlertDescription>
+                  Email успешно обновлен на {newEmail}
+                </AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="displayName">Имя пользователя</Label>
+                <label htmlFor="newEmail" className="text-sm font-medium">Email</label>
                 <Input
-                  id="displayName"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  id="newEmail"
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="Введите новый email"
                 />
               </div>
               
-              <div className="pt-4">
-                <Button onClick={() => toast({ description: "Профиль обновлен" })}>
-                  Сохранить изменения
-                </Button>
-              </div>
+              <Button 
+                className="w-full sm:w-auto" 
+                onClick={handleUpdateEmail}
+              >
+                Сохранить изменения
+              </Button>
             </div>
-          </TabsContent>
+          </div>
           
-          <TabsContent value="security" className="space-y-6">
-            <div className="space-y-8 max-w-lg">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Изменение Email</h3>
-                
-                {emailChangeSuccess && (
-                  <Alert className="bg-green-50 border-green-200 text-green-800 mb-4">
-                    <AlertDescription>
-                      Email успешно обновлен на {newEmail}
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
-                <div className="space-y-2">
-                  <Label htmlFor="currentEmail">Текущий Email</Label>
-                  <Input
-                    id="currentEmail"
-                    value={username}
-                    disabled
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="newEmail">Новый Email</Label>
-                  <Input
-                    id="newEmail"
-                    type="email"
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                  />
-                </div>
-                
-                <Button onClick={handleUpdateEmail}>
-                  Обновить Email
-                </Button>
-              </div>
-              
-              <div className="space-y-4 pt-4 border-t">
-                <h3 className="text-lg font-medium">Изменение пароля</h3>
-                
-                {passwordChangeSuccess && (
-                  <Alert className="bg-green-50 border-green-200 text-green-800 mb-4">
-                    <AlertDescription>
-                      Пароль успешно обновлен
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">Текущий пароль</Label>
-                  <Input
-                    id="currentPassword"
-                    type="password"
-                    placeholder="Введите текущий пароль"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">Новый пароль</Label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    placeholder="Введите новый пароль"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Подтвердите пароль</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Повторите новый пароль"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                </div>
-                
-                <Button onClick={handleUpdatePassword}>
-                  Обновить пароль
-                </Button>
-              </div>
+          {/* Изменение пароля */}
+          <div className="bg-white p-6 rounded-lg border shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <Lock className="h-5 w-5 text-blue-500" />
+              <h3 className="text-xl font-bold">Сменить пароль</h3>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="notifications" className="space-y-6">
-            <div className="space-y-4 max-w-lg">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="emailNotifications">Email уведомления</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Получать уведомления о задачах по электронной почте
-                  </p>
-                </div>
-                <Switch
-                  id="emailNotifications"
-                  checked={emailNotifications}
-                  onCheckedChange={setEmailNotifications}
+            <p className="text-sm text-muted-foreground mb-6">
+              Обновите пароль вашего аккаунта
+            </p>
+            
+            {passwordChangeSuccess && (
+              <Alert className="bg-green-50 border-green-200 text-green-800 mb-4">
+                <AlertDescription>
+                  Пароль успешно обновлен
+                </AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="currentPassword" className="text-sm font-medium">Текущий пароль</label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Введите текущий пароль"
                 />
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="pushNotifications">Push-уведомления</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Получать уведомления в браузере
-                  </p>
-                </div>
-                <Switch
-                  id="pushNotifications"
-                  checked={pushNotifications}
-                  onCheckedChange={setPushNotifications}
+              <div className="space-y-2">
+                <label htmlFor="newPassword" className="text-sm font-medium">Новый пароль</label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Введите новый пароль"
                 />
               </div>
               
-              <div className="pt-4">
-                <Button onClick={() => toast({ description: "Настройки уведомлений сохранены" })}>
-                  Сохранить настройки
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="appearance" className="space-y-6">
-            <div className="space-y-4 max-w-lg">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="darkMode">Темная тема</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Включить темную тему интерфейса
-                  </p>
-                </div>
-                <Switch
-                  id="darkMode"
-                  checked={darkMode}
-                  onCheckedChange={(checked) => {
-                    setDarkMode(checked);
-                    toast({ 
-                      description: checked ? "Темная тема включена" : "Темная тема отключена" 
-                    });
-                  }}
+              <div className="space-y-2">
+                <label htmlFor="confirmPassword" className="text-sm font-medium">Подтвердите новый пароль</label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Повторите новый пароль"
                 />
               </div>
+              
+              <Button 
+                className="w-full sm:w-auto"
+                onClick={handleUpdatePassword}
+              >
+                Обновить пароль
+              </Button>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </main>
     </div>
   );

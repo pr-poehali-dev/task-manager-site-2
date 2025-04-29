@@ -3,13 +3,12 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, LogOut } from "lucide-react";
-import { TaskType } from "@/types/task";
 
 interface HeaderProps {
-  onAddTask?: (task: Omit<TaskType, "id">) => void;
+  showAddButton?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onAddTask }) => {
+export const Header: React.FC<HeaderProps> = ({ showAddButton = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -46,6 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ onAddTask }) => {
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
             </div>
+            <span className="font-medium">ТаскМенеджер</span>
           </Link>
           
           <nav className="flex space-x-4">
@@ -77,10 +77,12 @@ export const Header: React.FC<HeaderProps> = ({ onAddTask }) => {
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="default" onClick={handleOpenAddTaskDialog} className="gap-1" size="sm">
-            <PlusCircle className="h-4 w-4 mr-1" />
-            Добавить задачу
-          </Button>
+          {showAddButton && (
+            <Button variant="default" onClick={handleOpenAddTaskDialog} className="gap-1" size="sm">
+              <PlusCircle className="h-4 w-4 mr-1" />
+              Добавить задачу
+            </Button>
+          )}
           <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full">
             <LogOut className="h-5 w-5" />
           </Button>
