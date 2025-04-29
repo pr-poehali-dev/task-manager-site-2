@@ -12,41 +12,19 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // В реальном приложении здесь была бы аутентификация
-    if (email && password) {
-      // Простая имитация авторизации
-      localStorage.setItem("isLoggedIn", "true");
-      navigate("/");
-    }
+    // Принимаем любые данные для входа
+    localStorage.setItem("isLoggedIn", "true");
+    // Также сохраняем email для отображения в настройках
+    localStorage.setItem("userEmail", email);
+    navigate("/");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <div className="flex justify-center mb-6">
-          <div className="flex items-center space-x-2">
-            <div className="text-blue-500 flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-6 w-6"
-              >
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-blue-500">ТаскМенеджер</h1>
-          </div>
-        </div>
-
         <h2 className="text-2xl font-bold text-center mb-2">Вход в систему</h2>
         <p className="text-center text-muted-foreground mb-6">
-          Введите ваши данные для входа в аккаунт
+          Введите любые данные для входа
         </p>
 
         <form onSubmit={handleLogin}>
@@ -75,15 +53,9 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-6">
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm font-medium">Пароль</label>
-              <a
-                href="#"
-                className="text-sm text-blue-500 hover:text-blue-600"
-              >
-                Забыли пароль?
-              </a>
             </div>
             <div className="relative">
               <Input
@@ -111,7 +83,7 @@ const Login = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mb-4">
+          <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600">
             <LogIn className="h-4 w-4 mr-2" /> Войти
           </Button>
         </form>

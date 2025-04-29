@@ -20,6 +20,22 @@ const App = () => {
     // Проверка авторизации при загрузке приложения
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
+
+    // Добавляем слушатель для storage, чтобы обновить состояние при изменении в localStorage
+    const handleStorageChange = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Также создаем свой event для синхронизации между компонентами
+    window.addEventListener("login-status-changed", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("login-status-changed", handleStorageChange);
+    };
   }, []);
 
   return (
