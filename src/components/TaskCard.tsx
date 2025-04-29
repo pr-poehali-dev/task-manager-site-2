@@ -97,3 +97,5 @@ export const TaskCard = ({
     </div>
   );
 };
+
+export default TaskCard;

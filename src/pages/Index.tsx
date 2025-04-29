@@ -1,8 +1,17 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TaskList } from "@/components/TaskList";
 import { Header } from "@/components/Header";
 import { TaskType } from "@/types/task";
+import TaskDialog from "@/components/TaskDialog";
+import { useNavigate, useLocation } from "react-router-dom";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Check } from "lucide-react";
 
 const Index = () => {
   const [tasks, setTasks] = useState<TaskType[]>([
@@ -35,6 +44,28 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("Все статусы");
   const [priorityFilter, setPriorityFilter] = useState("Все приоритеты");
+  const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
+  const [showEditTaskDialog, setShowEditTaskDialog] = useState(false);
+  const [editingTask, setEditingTask] = useState<TaskType | null>(null);
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Проверка URL для открытия модальных окон
+    if (location.pathname === "/add-task") {
+      setShowAddTaskDialog(true);
+    } else if (location.pathname.startsWith("/edit-task/")) {
+      const taskId = parseInt(location.pathname.split("/").pop() || "0");
+      const task = tasks.find(t => t.id === taskId);
+      if (task) {
+        setEditingTask(task);
+        setShowEditTaskDialog(true);
+      }
+    }
+  }, [location, tasks]);
 
   const handleStatusChange = (taskId: number, newStatus: string) => {
     setTasks(
@@ -44,8 +75,9 @@ const Index = () => {
     );
   };
 
-  const handleAddTask = (newTask: TaskType) => {
+  const handleAddTask = (newTask: Omit<TaskType, "id">) => {
     setTasks([...tasks, { ...newTask, id: tasks.length + 1 }]);
+    navigate('/');
   };
 
   const handleDeleteTask = (taskId: number) => {
@@ -53,8 +85,36 @@ const Index = () => {
   };
 
   const handleEditTask = (taskId: number) => {
-    // В реальном приложении тут будет открываться диалог редактирования
-    console.log("Редактирование задачи", taskId);
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      setEditingTask(task);
+      navigate(`/edit-task/${taskId}`);
+    }
+  };
+
+  const handleUpdateTask = (updatedTask: Omit<TaskType, "id">) => {
+    if (editingTask) {
+      setTasks(
+        tasks.map((task) =>
+          task.id === editingTask.id 
+            ? { ...updatedTask, id: editingTask.id } 
+            : task
+        )
+      );
+      setEditingTask(null);
+      navigate('/');
+    }
+  };
+
+  const handleCloseAddDialog = () => {
+    setShowAddTaskDialog(false);
+    navigate('/');
+  };
+
+  const handleCloseEditDialog = () => {
+    setShowEditTaskDialog(false);
+    setEditingTask(null);
+    navigate('/');
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -70,7 +130,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onAddTask={handleAddTask} />
+      <Header onAddTask={() => navigate('/add-task')} />
       <main className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Мои задачи</h1>
@@ -104,26 +164,82 @@ const Index = () => {
                 />
               </svg>
             </div>
-            <select
-              className="rounded-md border border-input px-4 py-2"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option>Все статусы</option>
-              <option>новая</option>
-              <option>в процессе</option>
-              <option>завершена</option>
-            </select>
-            <select
-              className="rounded-md border border-input px-4 py-2"
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-            >
-              <option>Все приоритеты</option>
-              <option>низкий</option>
-              <option>средний</option>
-              <option>высокий</option>
-            </select>
+
+            <DropdownMenu open={showStatusDropdown} onOpenChange={setShowStatusDropdown}>
+              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-full sm:w-auto">
+                <span>{statusFilter}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4 ml-2"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setStatusFilter("Все статусы")}>
+                  {statusFilter === "Все статусы" && <Check className="h-4 w-4 mr-2" />}
+                  Все статусы
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setStatusFilter("новая")}>
+                  {statusFilter === "новая" && <Check className="h-4 w-4 mr-2" />}
+                  Новые
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setStatusFilter("в процессе")}>
+                  {statusFilter === "в процессе" && <Check className="h-4 w-4 mr-2" />}
+                  В процессе
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setStatusFilter("завершена")}>
+                  {statusFilter === "завершена" && <Check className="h-4 w-4 mr-2" />}
+                  Завершенные
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu open={showPriorityDropdown} onOpenChange={setShowPriorityDropdown}>
+              <DropdownMenuTrigger className="rounded-md border border-input px-4 py-2 flex items-center justify-between w-full sm:w-auto">
+                <span>{priorityFilter}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4 ml-2"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setPriorityFilter("Все приоритеты")}>
+                  {priorityFilter === "Все приоритеты" && <Check className="h-4 w-4 mr-2" />}
+                  Все приоритеты
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPriorityFilter("низкий")}>
+                  {priorityFilter === "низкий" && <Check className="h-4 w-4 mr-2" />}
+                  Низкий
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPriorityFilter("средний")}>
+                  {priorityFilter === "средний" && <Check className="h-4 w-4 mr-2" />}
+                  Средний
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPriorityFilter("высокий")}>
+                  {priorityFilter === "высокий" && <Check className="h-4 w-4 mr-2" />}
+                  Высокий
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -134,6 +250,27 @@ const Index = () => {
           onEditTask={handleEditTask}
         />
       </main>
+
+      {/* Модальное окно добавления задачи */}
+      <TaskDialog
+        open={showAddTaskDialog}
+        onOpenChange={handleCloseAddDialog}
+        onSave={handleAddTask}
+        title="Новая задача"
+        description="Заполните необходимые поля для создания новой задачи"
+        buttonText="Создать"
+      />
+
+      {/* Модальное окно редактирования задачи */}
+      <TaskDialog
+        open={showEditTaskDialog}
+        onOpenChange={handleCloseEditDialog}
+        onSave={handleUpdateTask}
+        editingTask={editingTask}
+        title="Редактирование задачи"
+        description="Измените детали задачи и нажмите Сохранить"
+        buttonText="Сохранить"
+      />
     </div>
   );
 };
