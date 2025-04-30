@@ -42,11 +42,6 @@ const Dashboard = () => {
   const remainingCount = totalTasks - completedCount;
   const completionPercentage = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
-  // Подсчет процентного соотношения задач по статусам
-  const completedPercentage = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
-  const inProgressPercentage = totalTasks > 0 ? Math.round((inProgressTasks.length / totalTasks) * 100) : 0;
-  const newPercentage = totalTasks > 0 ? Math.round((newTasks.length / totalTasks) * 100) : 0;
-
   return (
     <div className="min-h-screen bg-background">
       <Header showAddButton={false} />
@@ -113,93 +108,28 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Прогресс выполнения и диаграмма */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg border shadow-sm">
-            <h3 className="text-xl font-bold mb-1">Общий прогресс выполнения</h3>
-            <p className="text-sm text-muted-foreground mb-6">Процент выполненных задач от общего количества</p>
-            
-            <div className="mb-4">
-              <Progress value={completionPercentage} className="h-2 mb-2" />
-              <div className="text-right text-sm">{completionPercentage}%</div>
-            </div>
-            
-            <div className="grid grid-cols-3 text-center mt-8">
-              <div>
-                <div className="text-sm text-muted-foreground">Всего</div>
-                <div className="font-bold">{totalTasks}</div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Завершено</div>
-                <div className="font-bold">{completedCount}</div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Осталось</div>
-                <div className="font-bold">{remainingCount}</div>
-              </div>
-            </div>
+        {/* Прогресс выполнения */}
+        <div className="bg-white p-6 rounded-lg border shadow-sm">
+          <h3 className="text-xl font-bold mb-1">Общий прогресс выполнения</h3>
+          <p className="text-sm text-muted-foreground mb-6">Процент выполненных задач от общего количества</p>
+          
+          <div className="mb-4">
+            <Progress value={completionPercentage} className="h-2 mb-2" />
+            <div className="text-right text-sm">{completionPercentage}%</div>
           </div>
-
-          <div className="bg-white p-6 rounded-lg border shadow-sm">
-            <h3 className="text-xl font-bold mb-1">Распределение задач</h3>
-            <p className="text-sm text-muted-foreground mb-6">Соотношение задач по статусам</p>
-            
-            <div className="flex justify-center mb-6">
-              <div className="relative w-44 h-44">
-                {/* Имитация пирогового графика с использованием SVG */}
-                <svg viewBox="0 0 36 36" className="w-full h-full">
-                  {/* Синий сектор для новых задач */}
-                  <path
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                    strokeDasharray={`${newPercentage}, 100`}
-                  />
-                  {/* Оранжевый сектор для задач в процессе */}
-                  <path
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    fill="none"
-                    stroke="#f97316"
-                    strokeWidth="3"
-                    strokeDasharray={`${inProgressPercentage}, 100`}
-                    strokeDashoffset={`-${newPercentage}`}
-                  />
-                  {/* Зеленый сектор для завершенных задач */}
-                  <path
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    fill="none"
-                    stroke="#22c55e"
-                    strokeWidth="3"
-                    strokeDasharray={`${completedPercentage}, 100`}
-                    strokeDashoffset={`-${newPercentage + inProgressPercentage}`}
-                  />
-                </svg>
-              </div>
+          
+          <div className="grid grid-cols-3 text-center mt-8">
+            <div>
+              <div className="text-sm text-muted-foreground">Всего</div>
+              <div className="font-bold">{totalTasks}</div>
             </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                  <span>Завершено</span>
-                </div>
-                <span>{completedPercentage}%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-                  <span>В процессе</span>
-                </div>
-                <span>{inProgressPercentage}%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                  <span>Новые</span>
-                </div>
-                <span>{newPercentage}%</span>
-              </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Завершено</div>
+              <div className="font-bold">{completedCount}</div>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Осталось</div>
+              <div className="font-bold">{remainingCount}</div>
             </div>
           </div>
         </div>
