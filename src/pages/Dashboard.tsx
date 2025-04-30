@@ -109,16 +109,18 @@ const Dashboard = () => {
         </div>
 
         {/* Прогресс выполнения */}
-        <div className="bg-white p-6 rounded-lg border shadow-sm">
+
+        {/* Прогресс выполнения */}
+        <div className="bg-white p-6 rounded-lg border shadow-sm max-w-3xl mx-auto">
           <h3 className="text-xl font-bold mb-1">Общий прогресс выполнения</h3>
-          <p className="text-sm text-muted-foreground mb-6">Процент выполненных задач от общего количества</p>
+          <p className="text-sm text-muted-foreground mb-4">Процент выполненных задач</p>
           
-          <div className="mb-4">
-            <Progress value={completionPercentage} className="h-2 mb-2" />
+          <div className="mb-3">
+            <Progress value={completionPercentage} className="h-2 mb-1" />
             <div className="text-right text-sm">{completionPercentage}%</div>
           </div>
           
-          <div className="grid grid-cols-3 text-center mt-8">
+          <div className="grid grid-cols-3 text-center mt-4">
             <div>
               <div className="text-sm text-muted-foreground">Всего</div>
               <div className="font-bold">{totalTasks}</div>
@@ -133,6 +135,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
       </main>
     </div>
   );
