@@ -42,6 +42,29 @@ const Dashboard = () => {
   const remainingCount = totalTasks - completedCount;
   const completionPercentage = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
+  // Получаем последние 5 задач (сортируем по id - предполагая, что более высокий id = более новая задача)
+  const recentTasks = [...tasks].sort((a, b) => b.id - a.id).slice(0, 5);
+
+  // Функция для определения цвета статуса
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case "новая": return "bg-blue-100 text-blue-800";
+      case "в процессе": return "bg-orange-100 text-orange-800";
+      case "завершена": return "bg-green-100 text-green-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Функция для определения цвета приоритета
+  const getPriorityColor = (priority: string) => {
+    switch(priority) {
+      case "высокий": return "bg-red-100 text-red-800";
+      case "средний": return "bg-yellow-100 text-yellow-800";
+      case "низкий": return "bg-gray-100 text-gray-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header showAddButton={false} />
@@ -109,9 +132,7 @@ const Dashboard = () => {
         </div>
 
         {/* Прогресс выполнения */}
-
-        {/* Прогресс выполнения */}
-        <div className="bg-white p-6 rounded-lg border shadow-sm max-w-3xl mx-auto">
+        <div className="bg-white p-6 rounded-lg border shadow-sm max-w-3xl mx-auto mb-8">
           <h3 className="text-xl font-bold mb-1">Общий прогресс выполнения</h3>
           <p className="text-sm text-muted-foreground mb-4">Процент выполненных задач</p>
           
@@ -136,6 +157,48 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Недавняя активность */}
+        <div className="bg-white p-6 rounded-lg border shadow-sm mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold">Недавняя активность</h3>
+            <span className="bg-blue-50 text-blue-600 py-1 px-2 rounded text-xs font-medium">
+              Последние 5 задач
+            </span>
+          </div>
+          
+          {recentTasks.length > 0 ? (
+            <ul className="divide-y">
+              {recentTasks.map(task => (
+                <li key={task.id} className="py-3 first:pt-0 last:pb-0">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
+                    <div className="mb-1 sm:mb-0">
+                      <h4 className="font-medium">{task.title}</h4>
+                      <p className="text-sm text-muted-foreground line-clamp-1">{task.description}</p>
+                    </div>
+                    <div className="flex gap-2 text-xs">
+                      <span className={`px-2 py-1 rounded-full ${getStatusColor(task.status)}`}>
+                        {task.status}
+                      </span>
+                      <span className={`px-2 py-1 rounded-full ${getPriorityColor(task.priority)}`}>
+                        {task.priority}
+                      </span>
+                    </div>
+                  </div>
+                  {task.dueDate && (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      Срок: {new Date(task.dueDate).toLocaleDateString()}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              <p>У вас пока нет задач</p>
+              <p className="text-sm">Добавьте задачи, чтобы увидеть их здесь</p>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
