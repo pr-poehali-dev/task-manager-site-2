@@ -155,8 +155,8 @@ const Index = () => {
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
-          <div className="flex gap-4 items-center">
-            <div className="relative flex-1">
+          <div className="flex gap-4 items-center flex-wrap">
+            <div className="relative flex-1 min-w-[250px]">
               <input
                 type="text"
                 placeholder="Поиск задач..."
@@ -255,7 +255,18 @@ const Index = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <Button 
+              variant="default" 
+              onClick={() => navigate('/add-task')} 
+              className="gap-1 bg-blue-500 hover:bg-blue-600 ml-auto"
+            >
+              <PlusCircle className="h-4 w-4 mr-1" />
+              Добавить задачу
+            </Button>
           </div>
+        </div>
+
         </div>
 
         <TaskList

@@ -57,13 +57,13 @@ export const Header: React.FC<HeaderProps> = ({ showAddButton = false }) => {
           </nav>
         </div>
         
+
         <div className="flex items-center gap-2">
-          {showAddButton && (
-            <Button variant="default" onClick={handleOpenAddTaskDialog} className="gap-1 bg-blue-500 hover:bg-blue-600" size="sm">
-              <PlusCircle className="h-4 w-4 mr-1" />
-              Добавить задачу
-            </Button>
-          )}
+          <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full" title="Выйти">
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </div>
+
           <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full" title="Выйти">
             <LogOut className="h-5 w-5" />
           </Button>
