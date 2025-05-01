@@ -97,7 +97,17 @@ const Index = () => {
   };
 
   const handleDeleteTask = (taskId: number) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      setTasks(tasks.map(t => 
+        t.id === taskId 
+          ? { ...t, deleted: true, deletedAt: new Date().toLocaleString("ru-RU") } 
+          : t
+      ));
+      
+      // Добавляем запись в историю
+      addHistoryEntry(taskId, "удалена", "");
+    }
   };
 
   const handleEditTask = (taskId: number) => {

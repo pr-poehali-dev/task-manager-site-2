@@ -9,4 +9,15 @@ export interface TaskType {
   dueDate: string;
   priority: TaskPriority | string;
   status: TaskStatus | string;
+  deleted?: boolean;
+  deletedAt?: string;
+}
+
+export interface TaskHistoryEntry {
+  id: number;
+  taskId: number;
+  taskTitle: string;
+  action: "создана" | "изменена" | "удалена" | "восстановлена" | "статус изменен";
+  timestamp: string;
+  details?: string;
 }
