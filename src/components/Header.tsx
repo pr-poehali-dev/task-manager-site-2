@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 interface HeaderProps {
   showAddButton?: boolean;
@@ -57,13 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ showAddButton = false }) => {
           </nav>
         </div>
         
-
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full" title="Выйти">
-            <LogOut className="h-5 w-5" />
-          </Button>
-        </div>
-
           <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full" title="Выйти">
             <LogOut className="h-5 w-5" />
           </Button>
