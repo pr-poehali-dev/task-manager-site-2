@@ -264,12 +264,15 @@ const Index = () => {
               <PlusCircle className="h-4 w-4 mr-1" />
               Добавить задачу
             </Button>
+
           </div>
         </div>
 
-        </div>
-
         <TaskList
+          tasks={filteredTasks}
+          onStatusChange={handleStatusChange}
+          onDeleteTask={handleDeleteTask}
+
           tasks={filteredTasks}
           onStatusChange={handleStatusChange}
           onDeleteTask={handleDeleteTask}
