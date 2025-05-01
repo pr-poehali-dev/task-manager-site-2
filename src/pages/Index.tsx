@@ -11,7 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Check } from "lucide-react";
+import { Check, PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [tasks, setTasks] = useState<TaskType[]>([
