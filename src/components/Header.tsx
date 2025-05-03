@@ -25,7 +25,11 @@ export const Header: React.FC<HeaderProps> = ({ showAddButton = false }) => {
     return location.pathname === path;
   };
 
-
+  return (
+    <header className="border-b bg-white">
+      <div className="container flex items-center justify-between h-16">
+        <div className="flex items-center">
+          <nav className="flex space-x-4">
             <Link 
               to="/dashboard" 
               className={`text-sm font-medium transition-colors hover:text-blue-500 ${
@@ -58,15 +62,6 @@ export const Header: React.FC<HeaderProps> = ({ showAddButton = false }) => {
             >
               История изменений
             </Link>
-            <Link 
-              to="/settings"
-              className={`text-sm font-medium transition-colors hover:text-blue-500 ${
-                isActive('/settings') ? 'text-blue-500' : 'text-muted-foreground'
-              }`}
-            >
-              Настройки
-            </Link>
-
             <Link 
               to="/settings"
               className={`text-sm font-medium transition-colors hover:text-blue-500 ${
